@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Announcement System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__container">
+      <h1 class="header__title">Event Announcement System</h1>
+      <nav class="header__nav">
+        <a href="#events" class="header__link">Events</a>
+        <a href="#subscribe" class="header__link">Subscribe</a>
+        <a href="#create" class="header__link">Create Event</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main container">
+    <section id="events" class="card card--events">
+      <h2 class="card__title">Upcoming Events</h2>
+      <ul class="events-list">
+        <li class="events-list__item">
+          <h3 class="events-list__event-title">AWS Cloud Workshop</h3>
+          <span class="events-list__event-date">2025-05-10</span>
+          <p class="events-list__event-desc">Join us for a hands-on AWS cloud workshop for beginners.</p>
+        </li>
+        <li class="events-list__item">
+          <h3 class="events-list__event-title">Serverless Architecture Webinar</h3>
+          <span class="events-list__event-date">2025-05-15</span>
+          <p class="events-list__event-desc">Learn about building scalable serverless applications on AWS.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="subscribe" class="card card--subscribe">
+      <h2 class="card__title">Subscribe for Event Notifications</h2>
+      <form class="form" action="https://your-api-gateway-endpoint/subscribe" method="POST">
+        <label class="form__label" for="subscribe-email">Email</label>
+        <input class="form__input" type="email" id="subscribe-email" name="email" placeholder="Your email" required>
+        <button class="form__button" type="submit">Subscribe</button>
+      </form>
+    </section>
+
+    <section id="create" class="card card--create">
+      <h2 class="card__title">Create a New Event</h2>
+      <form class="form" action="https://your-api-gateway-endpoint/create-event" method="POST">
+        <label class="form__label" for="event-title">Event Title</label>
+        <input class="form__input" type="text" id="event-title" name="title" placeholder="Event Title" required>
+        <label class="form__label" for="event-date">Date</label>
+        <input class="form__input" type="date" id="event-date" name="date" required>
+        <label class="form__label" for="event-desc">Description</label>
+        <textarea class="form__input" id="event-desc" name="description" placeholder="Event Description" required></textarea>
+        <button class="form__button" type="submit">Create Event</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__text">&copy; 2025 Event Announcement System</p>
+    </div>
+  </footer>
+</body>
+</html>
