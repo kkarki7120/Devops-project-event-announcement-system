@@ -76,11 +76,12 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Zip Subscribe Lambda Code
-        run: zip -r subscribe.zip ./lambda/subscribe
+        run: zip -r subscribe.zip ./lambda/subscribe \
+             echo ${{ secrets.LAMBDA_SUBSCRIBE }}
 
       - name: Deploy Subscribe Lambda
         run: aws lambda update-function-code \
-         ${{ secrets.LAMBDA_SUBSCRIBE }} \
+          --function-name ${{ secrets.LAMBDA_SUBSCRIBE }} \
           --zip-file fileb://subscribe.zip
 
   deploy-create-event-lambda:
@@ -98,8 +99,8 @@ jobs:
 
       - name: Zip Create-Event Lambda Code
         run: zip -r create-event.zip ./lambda/create-event
-
+      
       - name: Deploy Create-Event Lambda
         run: aws lambda update-function-code \
-          ${{ secrets.LAMBDA_CREATE_EVENT }} \
+          --function-name ${{ secrets.LAMBDA_CREATE_EVENT }} \
           --zip-file fileb://create-event.zip
