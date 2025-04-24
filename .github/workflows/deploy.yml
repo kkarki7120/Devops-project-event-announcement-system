@@ -80,7 +80,7 @@ jobs:
 
       - name: Deploy Subscribe Lambda
         run: aws lambda update-function-code \
-          --function-name ${{ secrets.LAMBDA_SUBSCRIBE }} \
+         ${{ secrets.LAMBDA_SUBSCRIBE }} \
           --zip-file fileb://subscribe.zip
 
   deploy-create-event-lambda:
@@ -98,15 +98,8 @@ jobs:
 
       - name: Zip Create-Event Lambda Code
         run: zip -r create-event.zip ./lambda/create-event
-      
-      - name: Ensure Lambda Name is Provided
-        run: |
-          if [ -z "${{ secrets.LAMBDA_CREATE_EVENT }}" ]; then
-            echo "LAMBDA_CREATE_EVENT secret is not set!"
-            exit 1
-          fi
-          
+
       - name: Deploy Create-Event Lambda
         run: aws lambda update-function-code \
-          --function-name ${{ secrets.LAMBDA_CREATE_EVENT }} \
+          ${{ secrets.LAMBDA_CREATE_EVENT }} \
           --zip-file fileb://create-event.zip
