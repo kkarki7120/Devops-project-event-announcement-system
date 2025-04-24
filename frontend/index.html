@@ -19,7 +19,7 @@
   </header>
 
   <main class="main container">
-    <section id="events" class="card card--events">
+    <!-- <section id="events" class="card card--events">
       <h2 class="card__title">Upcoming Events</h2>
       <ul class="events-list">
         <li class="events-list__item">
@@ -33,11 +33,44 @@
           <p class="events-list__event-desc">Learn about building scalable serverless applications on AWS.</p>
         </li>
       </ul>
-    </section>
+    </section> -->
+
+    <script>
+      const eventList = document.querySelector('.events-list');
+    
+      // Replace with your actual public URL for events.json
+      const jsonUrl = 'https://aws-event-management.s3.amazonaws.com/events.json';
+    
+      fetch(jsonUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch events');
+          }
+          return response.json();
+        })
+        .then(events => {
+          eventList.innerHTML = ''; // Clear static items if any
+          events.forEach(event => {
+            const li = document.createElement('li');
+            li.className = 'events-list__item';
+            li.innerHTML = `
+              <h3 class="events-list__event-title">${event.title}</h3>
+              <span class="events-list__event-date">${event.date}</span>
+              <p class="events-list__event-desc">${event.description}</p>
+            `;
+            eventList.appendChild(li);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading events:', error);
+          eventList.innerHTML = '<li>Could not load events. Please try again later.</li>';
+        });
+    </script>
+    
 
     <section id="subscribe" class="card card--subscribe">
       <h2 class="card__title">Subscribe for Event Notifications</h2>
-      <form class="form" action="https://your-api-gateway-endpoint/subscribe" method="POST">
+      <form class="form" action="https://qgydy60wfc.execute-api.us-east-1.amazonaws.com/subscribe" method="POST">
         <label class="form__label" for="subscribe-email">Email</label>
         <input class="form__input" type="email" id="subscribe-email" name="email" placeholder="Your email" required>
         <button class="form__button" type="submit">Subscribe</button>
@@ -46,7 +79,7 @@
 
     <section id="create" class="card card--create">
       <h2 class="card__title">Create a New Event</h2>
-      <form class="form" action="https://your-api-gateway-endpoint/create-event" method="POST">
+      <form class="form" action="https://qgydy60wfc.execute-api.us-east-1.amazonaws.com/create-event" method="POST">
         <label class="form__label" for="event-title">Event Title</label>
         <input class="form__input" type="text" id="event-title" name="title" placeholder="Event Title" required>
         <label class="form__label" for="event-date">Date</label>

@@ -20,12 +20,22 @@ jobs:
           filters: |
             frontend: 'frontend/**'
 
-      - name: Check lambda changes
-        id: lambda_changes
+      
+
+            
+      - name: Check subscribe lambda changes
+        id: subscribe_changes
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            lambda: 'lambda/**'
+                subscribe: 'lambda/subscribe/**'
+    
+      - name: Check create-event lambda changes
+        id: create_event_changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+                create_event: 'lambda/create_event/**'
 
   deploy-frontend:
     needs: detect-changes
@@ -42,9 +52,16 @@ jobs:
       - name: Sync Frontend to S3
         run: aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET }} --delete
 
-  deploy-lambda:
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+
+  
+  deploy-subscribe-lambda:
     needs: detect-changes
-    if: needs.detect-changes.outputs.lambda_changed == 'true'
+    if: needs.detect-changes.outputs.subscribe_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -54,7 +71,32 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Zip Lambda Code
-        run: zip -r lambda.zip ./lambda
-      - name: Deploy Lambda
-        run: aws lambda update-function-code --function-name ${{ secrets.LAMBDA_FUNCTION }} --zip-file fileb://lambda.zip
+
+      - name: Zip Subscribe Lambda Code
+        run: zip -r subscribe.zip ./lambda/subscribe
+
+      - name: Deploy Subscribe Lambda
+        run: aws lambda update-function-code \
+          --function-name ${{ secrets.LAMBDA_SUBSCRIBE }} \
+          --zip-file fileb://subscribe.zip
+
+  deploy-create-event-lambda:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.create_event_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Zip Create-Event Lambda Code
+        run: zip -r create-event.zip ./lambda/create-event
+
+      - name: Deploy Create-Event Lambda
+        run: aws lambda update-function-code \
+          --function-name ${{ secrets.LAMBDA_CREATE_EVENT }} \
+          --zip-file fileb://create-event.zip
