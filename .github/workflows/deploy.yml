@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       frontend_changed: ${{ steps.frontend_changes.outputs.frontend }}
-      subscribe_changed: ${{ steps.subscribe_changes.outputs.lambda }}
-      create_event_changed: ${{ steps.screate_event_changes.outputs.lambda }}
+      subscribe_changed: ${{ steps.subscribe_changes.outputs.subscribe }}
+      create_event_changed: ${{ steps.create_event_changes.outputs.create_event }}
     steps:
       - uses: actions/checkout@v4
       
