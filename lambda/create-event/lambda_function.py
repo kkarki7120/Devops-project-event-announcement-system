@@ -59,4 +59,3 @@ def lambda_handler(event, context):
         "body": json.dumps({"message": "Event created and subscribers notified"})
     }
 
-#fdvf
