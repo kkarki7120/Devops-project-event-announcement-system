@@ -101,11 +101,11 @@ jobs:
 
       - name: Check Zip File Contents
         run: |
-          unzip -l subscribe.zip || echo "❌ Zip is missing or invalid"
+          unzip -l create-event.zip || echo "❌ Zip is missing or invalid"
       
       
       - name: Ensure Lambda Name is Provided
-        run: echo ${{ secrets.LAMBDA_CREATE_EVENT }} > hello.txt
+        run: echo "${{ secrets.LAMBDA_CREATE_EVENT }}" > hello.txt
              cat hello.txt
 
 
