@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       frontend_changed: ${{ steps.frontend_changes.outputs.frontend }}
-      lambda_changed: ${{ steps.lambda_changes.outputs.lambda }}
+      subscribe_changed: ${{ steps.subscribe_changes.outputs.lambda }}
+      create_event_changed: ${{ steps.screate_event_changes.outputs.lambda }}
     steps:
       - uses: actions/checkout@v4
       
@@ -19,8 +20,6 @@ jobs:
         with:
           filters: |
             frontend: 'frontend/**'
-
-      
 
             
       - name: Check subscribe lambda changes

@@ -27,3 +27,4 @@ def lambda_handler(event, context):
         "body": json.dumps({"message": "Subscription initiated. Check your email!"})
     }
 
+#22
