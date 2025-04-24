@@ -104,9 +104,11 @@ jobs:
           unzip -l create-event.zip || echo "❌ Zip is missing or invalid"
       
       
-      - name: Ensure Lambda Name is Provided
-        run: echo "${{ secrets.LAMBDA_CREATE_EVENT }}" > hello.txt
-             cat hello.txt
+      - name: Check Secret Length
+        run: |
+          echo "Length of secret: ${#MY_SECRET}"
+        env:
+          MY_SECRET: ${{ secrets.LAMBDA_CREATE_EVENT }}
 
 
       - name: Deploy Create-Event Lambda
