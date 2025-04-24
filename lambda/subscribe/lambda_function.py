@@ -26,3 +26,5 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({"message": "Subscription initiated. Check your email!"})
     }
+
+#dscddscds

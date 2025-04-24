@@ -35,7 +35,7 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
-                create_event: 'lambda/create_event/**'
+                create_event: 'lambda/create-event/**'
 
   deploy-frontend:
     needs: detect-changes
