@@ -98,8 +98,7 @@ jobs:
 
       - name: Zip Create-Event Lambda Code
         run: zip -r create-event.zip ./lambda/create-event
-
+        
       - name: Deploy Create-Event Lambda
-        run: aws lambda update-function-code \
-          --function-name createEventFunction \
-          --zip-file fileb://create-event.zip
+        run: aws lambda update-function-code --function-name createEventFunction --zip-file fileb://create-event.zip
+
