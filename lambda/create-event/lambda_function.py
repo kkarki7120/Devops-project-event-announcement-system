@@ -2,6 +2,8 @@ import json
 import boto3
 import os
 from datetime import datetime
+from urllib.parse import parse_qs
+import base64
 
 s3 = boto3.client('s3')
 sns = boto3.client('sns')
@@ -12,11 +14,20 @@ TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
 
 def lambda_handler(event, context):
     print("Incoming event:", event)
-    body = json.loads(event['body'])
 
-    title = body.get('title')
-    date = body.get('date')
-    desc = body.get('description')
+    # Decode base64 body
+    if event.get('isBase64Encoded'):
+        decoded_body = base64.b64decode(event['body']).decode('utf-8')
+    else:
+        decoded_body = event['body']
+
+    # Parse URL-encoded body
+    parsed_body = parse_qs(decoded_body)
+
+    # Get fields
+    title = parsed_body.get('title', [None])[0]
+    date = parsed_body.get('date', [None])[0]
+    desc = parsed_body.get('description', [None])[0]
 
     if not title or not date or not desc:
         return {
@@ -58,4 +69,3 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({"message": "Event created and subscribers notified"})
     }
-

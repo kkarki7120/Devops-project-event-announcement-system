@@ -29,10 +29,10 @@
     <script>
       const eventList = document.querySelector('.events-list');
     
-      // Replace with your actual public URL for events.json
-      const jsonUrl = 'https://aws-event-management.s3.us-east-1.amazonaws.com/events.json';
+      // Replace with your actual API Gateway URL for fetching events
+      const apiUrl = 'https://your-api-id.execute-api.us-east-1.amazonaws.com/dev/events';
     
-      fetch(jsonUrl)
+      fetch(apiUrl, { method: 'GET' })
         .then(response => {
           if (!response.ok) {
             throw new Error('Failed to fetch events');
@@ -45,7 +45,6 @@
             const li = document.createElement('li');
             li.className = 'events-list__item';
             li.innerHTML = `
-              <img src="${event.image}" alt="${event.title}" class="events-list__event-image">
               <h3 class="events-list__event-title">${event.title}</h3>
               <span class="events-list__event-date">${event.date}</span>
               <p class="events-list__event-desc">${event.description}</p>
@@ -58,11 +57,10 @@
           eventList.innerHTML = '<li>Could not load events. Please try again later.</li>';
         });
     </script>
-    
 
     <section id="subscribe" class="card card--subscribe">
       <h2 class="card__title">Subscribe for Event Notifications</h2>
-      <form class="form" action="https://qgydy60wfc.execute-api.us-east-1.amazonaws.com/subscribe" method="POST">
+      <form class="form" action="https://your-api-id.execute-api.us-east-1.amazonaws.com/dev/subscribe" method="POST">
         <label class="form__label" for="subscribe-email">Email</label>
         <input class="form__input" type="email" id="subscribe-email" name="email" placeholder="Your email" required>
         <button class="form__button" type="submit">Subscribe</button>
@@ -71,7 +69,7 @@
 
     <section id="create" class="card card--create">
       <h2 class="card__title">Create a New Event</h2>
-      <form class="form" action="https://qgydy60wfc.execute-api.us-east-1.amazonaws.com/create-event" method="POST">
+      <form class="form" action="https://your-api-id.execute-api.us-east-1.amazonaws.com/dev/create-event" method="POST">
         <label class="form__label" for="event-title">Event Title</label>
         <input class="form__input" type="text" id="event-title" name="title" placeholder="Event Title" required>
         <label class="form__label" for="event-date">Date</label>
