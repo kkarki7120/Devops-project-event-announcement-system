@@ -5,40 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend_changed: ${{ steps.frontend_changes.outputs.frontend }}
-      subscribe_changed: ${{ steps.subscribe_changes.outputs.subscribe }}
-      create_event_changed: ${{ steps.create_event_changes.outputs.create_event }}
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check frontend changes
-        id: frontend_changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            frontend: 'frontend/**'
-
-            
-      - name: Check subscribe lambda changes
-        id: subscribe_changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-                subscribe: 'lambda/subscribe/**'
-    
-      - name: Check create-event lambda changes
-        id: create_event_changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-                create_event: 'lambda/create-event/**'
-
   deploy-frontend:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.frontend_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +16,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Sync Frontend to S3
-        run: aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET }} --delete
+        run: aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET }} --delete --exclude "events.json"
 
       - name: Invalidate CloudFront
         uses: chetan/invalidate-cloudfront-action@v2
@@ -60,45 +27,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
       
-
+    
   
-  deploy-subscribe-lambda:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.subscribe_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Zip Subscribe Lambda Code
-        run: zip -r subscribe.zip ./lambda/subscribe
-
-      - name: Deploy Subscribe Lambda
-        run: aws lambda update-function-code \
-          --function-name ${{ secrets.LAMBDA_SUBSCRIBE }} \
-          --zip-file fileb://subscribe.zip
-
-  deploy-create-event-lambda:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.create_event_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Zip Create-Event Lambda Code
-        run: zip -r create-event.zip ./lambda/create-event
-        
-      - name: Deploy Create-Event Lambda
-        run: aws lambda update-function-code --function-name createEventFunction --zip-file fileb://create-event.zip
-
