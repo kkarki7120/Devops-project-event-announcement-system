@@ -19,7 +19,7 @@ This is a serverless architecture that enables:
 
 
 ## 🧭 Architecture Diagram
-![Architecture Diagram](sns_arch.png.png)
+![Architecture Diagram](sns_arch.png)
 
 
 ## 📖 Full Step-by-Step Guide
