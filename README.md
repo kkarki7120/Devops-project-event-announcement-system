@@ -19,7 +19,7 @@ This is a serverless architecture that enables:
 
 
 ## 🧭 Architecture Diagram
-[](https://github.com/kkarki7120/Devops-project-event-announcement-system/blob/main/sns_arch.png)
+![Architecture Diagram](sns_arch.png.png)
 
 
 ## 📖 Full Step-by-Step Guide
